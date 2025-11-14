@@ -1,6 +1,7 @@
 package com.example.libreria.repository;
 
 import com.example.libreria.model.Reservation;
+import org.hibernate.engine.spi.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,5 +14,10 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     
     // TODO: Implementar los métodos de la reserva
+    List<Reservation> findByUserId(Long userId);
+    List<Reservation> findByStatus(Reservation.ReservationStatus status);
+
+    @Query("SELECT r FROM Reservation r WHERE r.status = 'OVERDUE'")
+    List<Reservation> findOverdueReservations();
 }
 
