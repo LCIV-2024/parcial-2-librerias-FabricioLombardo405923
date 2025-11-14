@@ -99,6 +99,8 @@ public class ReservationService {
             reservation.setStatus(Reservation.ReservationStatus.OVERDUE);
 
         } else {
+            BigDecimal free= calculateTotalFee(reservation.getBook().getPrice(), reservation.getRentalDays());
+            reservation.setTotalFee(free);
             reservation.setStatus(Reservation.ReservationStatus.RETURNED);
         }
 
@@ -149,13 +151,13 @@ public class ReservationService {
     }
     
     private BigDecimal calculateTotalFee(BigDecimal dailyRate, Integer rentalDays) {
+        // TODO: Implementar el cálculo del total de la reserva
         if (dailyRate == null || rentalDays == null || rentalDays <= 0) {
             return BigDecimal.ZERO;
         }
 
         return dailyRate.multiply(new BigDecimal(rentalDays))
                 .setScale(2, RoundingMode.HALF_UP);
-
     }
     
     private BigDecimal calculateLateFee(BigDecimal bookPrice, long daysLate) {
@@ -168,7 +170,6 @@ public class ReservationService {
         BigDecimal feePerDay = bookPrice.multiply(LATE_FEE_PERCENTAGE);
         return feePerDay.multiply(new BigDecimal(daysLate))
                 .setScale(2, RoundingMode.HALF_UP);
-
     }
     
     private ReservationResponseDTO convertToDTO(Reservation reservation) {
